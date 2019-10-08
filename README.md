@@ -8,4 +8,6 @@ a pauls record
 
 现在统计最近时间：
 
-- 1008 15:55 afternoon nap也。稍迟。
+- 15:55 afternoon nap也。稍迟。1008 
+- 16:50 wake
+
