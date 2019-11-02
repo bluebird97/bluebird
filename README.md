@@ -1,4 +1,18 @@
-# bluebird
+# G.U.I.L.E plan 
+
+Nov decision：
+
+** guile style day in day out fuck **
+
+plan GUILE:
+
+**G** et up super early and Get sleep before 11:00
+**U** fucking productive machine
+**I** have no myself
+**L** ose control . never happen
+**E** at the wall and papers, hit thE wall constantly
+
+---
 
 用于每日进步打卡仪式
 
@@ -25,6 +39,8 @@
 ```
 
 # 动态修正
+
+- 1102 update GUILE plan for November
 
 ##  调整时间
 
