@@ -7,10 +7,20 @@ Nov decision：
 plan GUILE:
 
 **G** et up super early and Get sleep before 11:00
+
 **U** fucking productive machine
+
 **I** have no myself
+
 **L** ose control . never happen
+
 **E** at the wall and papers, hit thE wall constantly
+
+---
+
+decisions:
+
+- consider use modern tech: record 820概念北宋题目:save to phone:单曲循环+ shuffle
 
 ---
 
