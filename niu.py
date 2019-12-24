@@ -15,13 +15,14 @@ N_GENERATIONS = 200
 X_BOUND = [0, 5]         # x upper and lower bounds
 a = 0.3                  # invert coefficient
 
+# F 这个名字起的真烂！！！should be calculateEveryonesFitnessMayContainMinus
 def F(x): 
 	retArr = []
 	for ele in x:
 		retArr.append(np.sin(10*ele)*ele + np.cos(2*ele)*ele)
 	return  np.asarray(retArr)     # to find the maximum of this function
 
-
+# 名字太烂，should be： fixEveryonesFitnessSoNeverContainMinus
 # find non-zero fitness for selection
 def get_fitness(pred): return pred + 1e-3 - np.min(pred)
 
@@ -35,12 +36,18 @@ def select(pop, fitness):    # nature selection wrt pop's fitness
                            p=fitness/fitness.sum())
     return pop[idx]
 
-def invert_R1(pop,fitness): #
+def invert_R1(population, original_fitness): 
+    # tt 这里进行比对，是边界，退出，的条件（递归原则：退出条件写在最上面）
+    fitness_aver = original_fitness.sum()/POP_SIZE
+    # mark1
+    if population.minFitness > fitness_aver:
+        print "loop end"
+        return
+    #tt then here is otherwise do: reGenerate population(SR fxck each other)
+    # when population.minFitness < fitness_aver
     S_total = []
     R_total = []
     r = 0
-    fitness_aver = fitness.sum()/POP_SIZE
-    print("the average of fitness:",fitness_aver)
     for index in range(len(fitness)):
         if fitness[index] >= fitness_aver:                    
             S_total.append(translateDNA(pop[index]))
@@ -57,36 +64,16 @@ def invert_R1(pop,fitness): #
     else: # tt fix , we don't use another if to judge
         for i in range (r):
             del S_total[np.random.choice(range(len(S_total)))]
-    # now we got the same size length list   
-    print("len(S_total): ", len(S_total))
-    print("len(R_total): ", len(R_total))
 
-    R1_invert = [(1-a) * S_total[i]+ a * R_total[i] for i in range(len(S_total))] 
-    print("===============================")
-    print(len(R1_invert), "<<<<R1_invert.len")
-    print("R1_invert =",R1_invert)
-    print("===============================")
-
-    R1 = R1_invert + S
-
-    print("")
-    print(len(R1), "<<<<R1.len")  
-
-    print("===============================")
-    print("R1 =",R1)
-    print("===============================")          
-    R1_F = F(R1)                      
-    #R1_fitness =  get_fitness(R1_F)
-    #print("R1 =",R1) ## tt1
-    #print("R1_fitness =", R1_fitness)
-    #while R1_fitness < fitness_aver:
-        
-        #R_total = R1
-        #R1 = [(1-a)*S_total[i]+a*R_total[i] for i in range(len(S_total))]
-    #print("R1 =", R1)
-    #print("R1_invert's length:", len(R1_invert))
-    #print("R1's length:", len(R1))
-    return R1
+    # R1_invert = newGeneration
+    newGenerationBaby = [(1-a) * S_total[i]+ a * R_total[i] for i in range(len(S_total))] 
+    realNewGeneration = newGenerationBaby + S
+         
+    realNewGenerationFitnessList = F(realNewGeneration)
+    adjustedFitnessList = get_fitness(realNewGenerationFitnessList)
+    # here we enter infinite loop, quit until mark1
+    invert_R1(R1,fitness)
+###### end of invert_R1
 
 def crossover(parent, pop):     # mating process (genes crossover)
     if np.random.rand() < CROSS_RATE:
