@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import array
+# make change
 
 DNA_SIZE = 10            # DNA length
 POP_SIZE = 100           # population size
