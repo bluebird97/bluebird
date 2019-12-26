@@ -1,0 +1,43 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import array
+
+DNA_SIZE = 10            # DNA length
+POP_SIZE = 100           # population size
+CROSS_RATE = 0.8         # mating probability (DNA crossover)
+MUTATION_RATE = 0.003    # mutation probability
+N_GENERATIONS = 200
+X_BOUND = [0, 5]         # x upper and lower bounds
+a = 0.3                  # invert coefficient
+
+
+改动在这个函数
+def F(x):
+    retArr = []
+    for ele in x :
+        retArr.append(np.sin(10*ele)*ele + np.cos(2*ele)*ele)
+    Arr = retArr   
+    
+    return Arr
+    
+加了一个Arr列表，返回了如下问题：
+
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-57-9ad8d920b4ec> in <module>
+    108 T = translateDNA(pop)
+    109 F_values = F(T)
+--> 110 fitness = get_fitness(F_values)
+    111 
+    112 R1 = invert_R1(pop,fitness)
+
+<ipython-input-57-9ad8d920b4ec> in get_fitness(pred)
+     20 
+     21 def get_fitness(pred):
+---> 22     return pred + 1e-3 - np.min(pred)
+     23 
+     24 def translateDNA(pop):
+
+TypeError: can only concatenate list (not "float") to list
+
+这应该是说和fitness函数又有问题了吧 指fitness不是列表？
