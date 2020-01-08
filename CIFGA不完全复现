@@ -1,0 +1,154 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+DNA_SIZE = 10            # DNA length
+POP_SIZE = 100           # population size
+CROSS_RATE = 0.8         # mating probability (DNA crossover)
+MUTATION_RATE = 0.003    # mutation probability
+N_GENERATIONS = 200
+X_BOUND = [0, 5]         # x upper and lower bounds
+a = 0.3                  # invert coefficient
+
+def F(transpop):
+    F = [np.sin(10*transpop[i])*transpop[i] + np.cos(2*transpop[i])*transpop[i] for i in range(len(transpop))]
+    return F
+
+def get_fitness(pred):
+    fit = [pred[i] + 1e-3 - np.min(pred) for i in range(len(pred))]
+    return fit
+
+def initial_origin(POP_SIZE,DNA_SIZE):
+    pop = []
+    for i in range(POP_SIZE):
+        temporary = []
+        for j in range(DNA_SIZE):
+            temporary.append(np.random.randint(0,2))
+        pop.append(temporary)
+    return pop
+
+
+#从二进制到十进制
+ #input:种群,染色体长度
+
+def transDNA(pop):
+    temp = []
+    a = 0
+    for i in range(POP_SIZE):
+        a = sum(pop[i][j]*(math.pow(2,j))for j in range(DNA_SIZE))/float(2**DNA_SIZE-1) * 5 
+        #for j in range(DNA_SIZE):
+            
+        temp.append(a)
+    return temp
+        
+def select(pop, fitness):    # nature selection wrt pop's fitness
+    idx = np.random.choice(np.arange(POP_SIZE), size=POP_SIZE, replace=True,
+                           p=fitness/fitness.sum())
+    return pop[idx]
+
+
+def crossover(parent, pop):     # mating process (genes crossover)
+    if np.random.rand() < CROSS_RATE:
+        i_ = np.random.randint(0, POP_SIZE, size=1)                             # select another individual from pop
+        cross_points = np.random.randint(0, 2, size=DNA_SIZE).astype(np.bool)   # choose crossover points
+        parent[cross_points] = pop[i_, cross_points]                            # mating and produce one child
+    return parent
+
+
+def mutate(child):
+    for point in range(DNA_SIZE):
+        if np.random.rand() < MUTATION_RATE:
+            child[point] = 1 if child[point] == 0 else 0
+    return child
+
+
+def invert_R1(pop,fitness):
+    fitness_aver = sum(fitness)/POP_SIZE
+    S_total = []
+    R_total = []
+    R1_invert = []
+    r = 0
+    print("the average of fitness:",fitness_aver)
+    for index in range(len(fitness)):
+        if fitness[index] >= fitness_aver:
+            S_total.append(pop[index])
+
+        else:
+            R_total.append(pop[index])
+            
+    S = S_total.copy()
+    R = R_total.copy()
+    r = abs(len(S_total) - len(R_total))
+ 
+    #print("S_total's length:", len(S_total))
+    #print("S_total:",S_total)
+    #print("R_total's length:", len(R_total))
+    #print("R_total:",R_total)
+
+    if len(S_total) < len(R_total):
+        for i in range (r):
+            del R_total[np.random.choice(range(len(R_total)))]
+
+    if len(S_total) > len(R_total):
+        for i in range (r):
+            del S_total[np.random.choice(range(len(S_total)))]
+        
+        for i in range(len(S_total)):
+            R1_pre = [(1-a)*S_total[i][j]+a*R_total[i][j] for j in range(DNA_SIZE)]
+            for k in range(DNA_SIZE):
+                if R1_pre[k] < 0.5:
+                    R1_pre[k] = 0
+                else: R1_pre[k] = 1
+            R1_invert.append(R1_pre)
+    
+    
+    #print("R1_invert =",R1_invert)
+    #R1_invert = [(1-a)*S_total[i]+a*R_total[i] for i in range(len(S_total))]
+    R1 = R1_invert + S
+    transR1 = transDNA(R1)
+    R1_F = F(transR1)
+    R1_fitness = get_fitness(R1_F)
+   
+        
+    while np.min(R1_fitness) < fitness_aver:
+        
+        R_total = R1_invert.copy()
+        R1_invert.clear()
+        for i in range(len(S_total)):
+            R1_pre = [(1-a)*S_total[i][j]+a*R_total[i][j] for j in range(DNA_SIZE)]
+            for k in range(DNA_SIZE):
+                if R1_pre[k] < 0.5:
+                    R1_pre[k] = 0
+                else: R1_pre[k] = 1
+            R1_invert.append(R1_pre)
+        #print("R1_invert's length",len(R1_invert))
+
+        R1_new = R1_invert.copy() + S.copy()
+        transR1_new = transDNA(R1_new)
+        R1_newF = F(transR1_new)
+        R1_newfitness = get_fitness(R1_newF)
+        print("R1_newfitness =", R1_newfitness)
+        
+    #print("R1_F =", R1_F)
+    print("R1_newfitness =", R1_newfitness)
+
+    return R1_new
+
+pop = initial_origin(POP_SIZE,DNA_SIZE)  
+
+#print("pop :", pop)
+#print("pop's length :", len(pop))
+#print("total =",total)
+#print("total's length :", len(total))
+
+T = transDNA(pop)
+F_values = F(T)
+fitness = get_fitness(F_values)
+
+R1 = invert_R1(pop,fitness)
+print("R1 =",R1)
+#print("S_total's min:",np.argmin(get_fitness(S)))
+#print("max_fitness:",float(np.max(fitness)))
+#print("fitness:",fitness)
+#print("F_values:",F_values)
+#print("T's value :", T)
