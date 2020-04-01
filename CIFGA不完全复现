@@ -100,6 +100,8 @@ def invert_R1(pop,fitness):
                     R1_pre[k] = 0
                 else: R1_pre[k] = 1
             R1_invert.append(R1_pre)
+            print R1_invert
+
     
     
     #print("R1_invert =",R1_invert)
