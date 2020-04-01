@@ -109,7 +109,11 @@ def invert_R1(pop,fitness):
     R1_F = F(transR1)
     R1_fitness = get_fitness(R1_F)
    
-        
+    # 添加注释， 可以让过去未来的大家都看懂
+    # 迭代（核心部分），
+    # 输入是： R1-fitness
+    # 输出是： R1——invert+ S。copy
+    # 目的是： 得到合适的，新的，R1。于是我们期望天天1 那里每次出现不一样的print 结果
     while np.min(R1_fitness) < fitness_aver:
         
         R_total = R1_invert.copy()
@@ -128,10 +132,11 @@ def invert_R1(pop,fitness):
         R1_newF = F(transR1_new)
         R1_newfitness = get_fitness(R1_newF)
         print("R1_newfitness =", R1_newfitness)
+        #天天1 问题出在这里吗？每次while执行的时候会print 一次 
         
     #print("R1_F =", R1_F)
     print("R1_newfitness =", R1_newfitness)
-
+    #天天2 问题出在这里吗？整个while执行完毕（迭代完毕）再打印一次（此时打印的是最后一次while内打印的那次数据）
     return R1_new
 
 pop = initial_origin(POP_SIZE,DNA_SIZE)  
