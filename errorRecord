@@ -17,6 +17,10 @@ AttributeError: 'numpy.ndarray' object has no attribute 'append'
     retArr = []]
                ^
 SyntaxError: invalid syntax
+上面写的什么，写体系一些，太碎片了。改了什么地方？我看到的只是一部分报错后的调试过程。
+
+下面是你的测试结果吧？
+
 {19-12-24 17:50}EarthRoute:~/Downloads@master✗✗✗✗✗✗ paul% python3 niu.py
 the average of fitness: 8.840758124821482
 r = 24
